@@ -1,35 +1,52 @@
+
 package lesson2;
 
-import static java.lang.Integer.*;
-
 public class Main {
+    static int SIZE = 4;
     public static void main(String[] args) {
 
         String [][] arr = {
-                {"1", "15", "7", "5"},
+                {"1", "15", "9", "5"},
                 {"4", "8", "1", "23"},
                 {"3", "0", "9", "1"},
-                {"2", "0", "8", "11"}
+                {"2", "7", "8", "11"}
         };
         try {
-            checkArray(arr);
+            System.out.println(checkArray(arr));
         } catch (MyArraySizeException e){
+            e.printStackTrace();
             System.out.println("Неверный размер массива");
-        };
+        } catch (MyArrayDataException e) {
+            e.printStackTrace();
+            System.out.println("Этот элемент не является числом " + e.getCol() + " " + e.getRow());
+        }
         System.out.println("End");
 
     }
 
 
 
-    private static int checkArray(String[][] arr){
-        int result = 0;
+    static int checkArray(String[][] arr) throws MyArraySizeException, MyArrayDataException{
+
+       int result = 0;
+        if (arr.length != SIZE){ //проверка количества строк
+            throw new MyArraySizeException();
+        }
         for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                result += Integer.parseInt(arr[i][j]);
+            if (arr[i].length != SIZE){ //проверка длины строки
+                throw new MyArraySizeException();
+            } else {
+                for (int j = 0; j < arr.length; j++) {
+                    try {
+                        result += Integer.parseInt(arr[i][j]);
+                    } catch (NumberFormatException e) {
+                        throw new MyArrayDataException("Неверные данные в ячейке " + i + " " + j, i, j);
+                    }
+                }
             }
         }
         System.out.println(result + " Final result");
-        return result;
+        return result;}
     }
-}
+
+
